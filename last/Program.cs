@@ -104,34 +104,119 @@ public class Program
         Console.Clear();
         Console.WriteLine("Review Student Status");
 
-        // Implement reviewing student status functionality here
-        // Example: List all students and their statuses.
+        foreach (var student in Students)
+        {
+            Console.WriteLine($"Student ID: {student.Id}, Name: {student.Name}, Status: {student.Status}");
+        }
 
         Console.WriteLine("Press Enter to continue.");
         Console.ReadLine();
     }
+
 
     public static void BookMeeting()
     {
         Console.Clear();
         Console.WriteLine("Book Meeting");
 
-        // Implement booking a meeting functionality here
-        // Example: Ask for student ID, supervisor ID, date, and purpose, and create a meeting.
+        Console.Write("Enter Student ID: ");
+        if (int.TryParse(Console.ReadLine(), out int studentId))
+        {
+            Student student = Students.FirstOrDefault(s => s.Id == studentId);
+            if (student != null)
+            {
+                Console.Write("Enter Supervisor ID: ");
+                if (int.TryParse(Console.ReadLine(), out int supervisorId))
+                {
+                    PrimarySupervisor supervisor = PrimarySupervisors.FirstOrDefault(ps => ps.Id == supervisorId);
+                    if (supervisor != null)
+                    {
+                        Console.Write("Enter Meeting Date (yyyy-MM-dd): ");
+                        if (DateTime.TryParseExact(Console.ReadLine(), "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out DateTime date))
+                        {
+                            Console.Write("Enter Meeting Purpose: ");
+                            string purpose = Console.ReadLine();
 
-        Console.WriteLine("Meeting booked successfully. Press Enter to continue.");
-        Console.ReadLine();
+                            var meeting = new Meeting
+                            {
+                                Id = Meetings.Count + 1,
+                                Date = date,
+                                Purpose = purpose,
+                            };
+
+                            student.Meetings.Add(meeting);
+                            supervisor.Meetings.Add(meeting);
+
+                            Console.WriteLine("Meeting booked successfully. Press Enter to continue.");
+                            Console.ReadLine();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid date format. Press Enter to continue.");
+                            Console.ReadLine();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Supervisor not found. Press Enter to continue.");
+                        Console.ReadLine();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input for Supervisor ID. Press Enter to continue.");
+                    Console.ReadLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Student not found. Press Enter to continue.");
+                Console.ReadLine();
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid input for Student ID. Press Enter to continue.");
+            Console.ReadLine();
+        }
     }
+
 
     public static void ViewStudentStatusAndInteractions()
     {
         Console.Clear();
         Console.WriteLine("View Student Status and Interactions");
 
-        // Implement viewing student status and interactions functionality here
-        // Example: Ask for student ID and display their status and meetings with the supervisor.
+        Console.Write("Enter Student ID: ");
+        if (int.TryParse(Console.ReadLine(), out int studentId))
+        {
+            Student student = Students.FirstOrDefault(s => s.Id == studentId);
+            if (student != null)
+            {
+                Console.WriteLine($"Student ID: {student.Id}, Name: {student.Name}");
+                Console.WriteLine($"Status: {student.Status}");
 
-        Console.WriteLine("Press Enter to continue.");
-        Console.ReadLine();
+                Console.WriteLine("Meeting interactions with Primary Supervisor:");
+
+                foreach (var meeting in student.Meetings)
+                {
+                    Console.WriteLine($"Meeting ID: {meeting.Id}, Date: {meeting.Date:yyyy-MM-dd}, Purpose: {meeting.Purpose}");
+                }
+
+                Console.WriteLine("Press Enter to continue.");
+                Console.ReadLine();
+            }
+            else
+            {
+                Console.WriteLine("Student not found. Press Enter to continue.");
+                Console.ReadLine();
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid input for Student ID. Press Enter to continue.");
+            Console.ReadLine();
+        }
     }
+
 }
