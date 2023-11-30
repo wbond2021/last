@@ -73,12 +73,30 @@ public class Program
         Console.Clear();
         Console.WriteLine("Report Feeling/Progress");
 
-        // Implement reporting functionality here
-        // Example: Ask for student ID, status, and update the student's status.
-        // Remember to add the student and supervisor objects to the corresponding lists if needed.
+        Console.Write("Enter Student ID: ");
+        if (int.TryParse(Console.ReadLine(), out int studentId))
+        {
+            Student student = Students.FirstOrDefault(s => s.Id == studentId);
+            if (student != null)
+            {
+                Console.Write("Enter Status/Feeling: ");
+                string status = Console.ReadLine();
+                student.Status = status;
 
-        Console.WriteLine("Feeling/Progress reported successfully. Press Enter to continue.");
-        Console.ReadLine();
+                Console.WriteLine("Feeling/Progress reported successfully. Press Enter to continue.");
+                Console.ReadLine();
+            }
+            else
+            {
+                Console.WriteLine("Student not found. Press Enter to continue.");
+                Console.ReadLine();
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid input. Press Enter to continue.");
+            Console.ReadLine();
+        }
     }
 
     public static void ReviewStudentStatus()
